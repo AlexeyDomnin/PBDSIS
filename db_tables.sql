@@ -2,6 +2,7 @@ CREATE TABLE `Entities` (
   `id` char(36) NOT NULL ,
   `type` varchar(200) NOT NULL,
   `name` varchar(200) NOT NULL,
+  `username` varchar(200),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -32,7 +33,7 @@ CREATE TABLE `Roles` (
   `id` char(36) NOT NULL,
   `entity_id` char(36) NOT NULL,
   `object_id` char(36) NOT NULL,
-  `role` varchar(200) NOT NULL,
+  `role` ENUM('FOREMAN', 'MANAGER') NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `role_entities` FOREIGN KEY (`entity_id`) REFERENCES `Entities` (`id`),
   CONSTRAINT `role_objects` FOREIGN KEY (`object_id`) REFERENCES `Objects` (`id`)
