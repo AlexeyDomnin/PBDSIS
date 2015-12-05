@@ -1,6 +1,6 @@
 CREATE TABLE `Entities` (
   `id` char(36) NOT NULL ,
-  `type` `role` ENUM('EMPLOYEE','CLIENT','COMPANY','SHOP') NOT NULL,
+  `type` ENUM('EMPLOYEE','CLIENT','COMPANY','SHOP') NOT NULL,
   `name` varchar(200) NOT NULL,
   `username` varchar(200),
   PRIMARY KEY (`id`)
