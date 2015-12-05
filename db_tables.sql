@@ -86,7 +86,7 @@ CREATE TABLE `Transactions` (
   `id` char(36) NOT NULL,
   `from` char(36) NOT NULL,
   `to` char(36) NOT NULL,
-  `type` varchar(200) NOT NULL,
+  `type` ENUM('SALLARY','MATERIAL','CLIENT') NOT NULL,
   `value` decimal(10,2) NOT NULL,
   `description` text NOT NULL,
   `object_id` char(36) NOT NULL,
