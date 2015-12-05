@@ -89,6 +89,7 @@ CREATE TABLE `Transactions` (
   `type` varchar(200) NOT NULL,
   `value` decimal(10,2) NOT NULL,
   `description` text NOT NULL,
+  `created_at` timestamp NOT NULL,
   PRIMARY KEY(`id`),
   CONSTRAINT `transactions_entities1` FOREIGN KEY (`from`) REFERENCES `Entities` (`id`),
   CONSTRAINT `transactions_entities2` FOREIGN KEY (`to`) REFERENCES `Entities` (`id`)
