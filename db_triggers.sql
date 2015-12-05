@@ -18,7 +18,7 @@ CREATE TRIGGER on_delete_from_entities AFTER DELETE ON Entities FOR EACH ROW INS
 
 CREATE TRIGGER on_delete_from_objects AFTER DELETE ON Objects FOR EACH ROW INSERT INTO Log(id,date,description) values(UUID(),NOW(),CONCAT("object ",OLD.id," deleted from Objectss by ",USER()));
 
-CREATE TRIGGER on_delete_from_assignment AFTER DELETE ON Assignments FOR EACH ROW INSERT INTO Log(id,date,description) values(UUID(),NOW(),CONCAT("assignment ",OLD.entity_id," - ",OLD.object_id," deleted from Assignments by ",USER()));
+CREATE TRIGGER on_delete_from_assignments AFTER DELETE ON Assignments FOR EACH ROW INSERT INTO Log(id,date,description) values(UUID(),NOW(),CONCAT("assignment ",OLD.entity_id," - ",OLD.object_id," deleted from Assignments by ",USER()));
 
 CREATE TRIGGER on_delete_from_permissions AFTER DELETE ON Permissions FOR EACH ROW INSERT INTO Log(id,date,description) values(UUID(),NOW(),CONCAT("permission ",OLD.entity_id," : ",OLD.permission," : ",OLD.object_id, " deleted from Permissions by ",USER()));
 
