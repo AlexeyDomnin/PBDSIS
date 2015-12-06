@@ -18,4 +18,5 @@ BEGIN
     LEFT join outcome o 
     	on e.id = o.from_entity_id;
   INSERT INTO balance_per_day (entity_id,balance) SELECT id,balance FROM account_balance;
+  INSERT INTO Log (id, date, description) VALUES (UUID(), NOW(), 'the balance for each entity is calculated and added to the table balance_per_day');
 END
