@@ -7,7 +7,7 @@ USE new_sevryukov_task;
 
 CREATE TABLE IF NOT EXISTS entities (
   id char(36) NOT NULL DEFAULT '1',
-  type enum ('EMPLOYEE', 'CLIENT', 'COMPANY', 'SHOP') NOT NULL,
+  type enum ('EMPLOYEE','CLIENT','COMPANY','SHOP','FOREMAN','MANAGER') NOT NULL,
   name varchar(200) NOT NULL,
   username varchar(200) DEFAULT NULL,
   PRIMARY KEY (id)
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS roles (
   id char(36) NOT NULL,
   entity_id char(36) NOT NULL,
   object_id char(36) NOT NULL,
-  role enum ('FOREMAN', 'MANAGER') NOT NULL,
+  role enum ('FOREMAN', 'MANAGER','EMPLOYEE') NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT role_entities FOREIGN KEY (entity_id)
   REFERENCES entities (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
