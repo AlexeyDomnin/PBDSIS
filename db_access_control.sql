@@ -4,8 +4,8 @@ BEGIN
 	DECLARE user_id VARCHAR(200);
 	DECLARE pCount INT;
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
-	SELECT id INTO user_id FROM subjects WHERE STRCMP(user,subjects.username)=0 LIMIT 1;
-	SELECT count(*) INTO pCount FROM permissions WHERE STRCMP(subject_id,user_id)=0 AND STRCMP(object_id,obj)=0 AND permission='READ';
+	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
+	SELECT count(*) INTO pCount FROM permissions WHERE STRCMP(entity_id,user_id)=0 AND STRCMP(object_id,obj)=0 AND permission='READ';
 	IF (pCount > 0) THEN
 		SELECT * FROM transactions WHERE STRCMP(transactions.object_id,obj)=0;
 	ELSE
@@ -19,10 +19,10 @@ BEGIN
 	DECLARE user_id VARCHAR(200);
 	DECLARE pCount INT;
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
-	SELECT id INTO user_id FROM subjects WHERE STRCMP(user,subjects.username)=0 LIMIT 1;
-	SELECT count(*) INTO pCount FROM permissions WHERE STRCMP(subject_id,user_id)=0 AND permission='READ';
+	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
+	SELECT count(*) INTO pCount FROM permissions WHERE STRCMP(entity_id,user_id)=0 AND permission='READ';
 	IF (pCount > 0) THEN
-		SELECT * FROM transactions WHERE transactions.object_id IN (SELECT object_id FROM permissions WHERE STRCMP(subject_id,user_id)=0 AND permission='READ');
+		SELECT * FROM transactions WHERE transactions.object_id IN (SELECT object_id FROM permissions WHERE STRCMP(entity_id,user_id)=0 AND permission='READ');
 	ELSE
 		SELECT "Error";
 	END IF;
@@ -34,8 +34,8 @@ BEGIN
 	DECLARE user_id VARCHAR(200);
 	DECLARE pCount INT;
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
-	SELECT id INTO user_id FROM subjects WHERE STRCMP(user,subjects.username)=0 LIMIT 1;
-	SELECT count(*) INTO pCount FROM permissions WHERE STRCMP(subject_id,user_id)=0 AND STRCMP(object_id,obj)=0 AND permission='INSERT';
+	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
+	SELECT count(*) INTO pCount FROM permissions WHERE STRCMP(entity_id,user_id)=0 AND STRCMP(object_id,obj)=0 AND permission='INSERT';
 	IF (pCount > 0) THEN
 		INSERT INTO transactions VALUES (UUID(), f, t, ty, val, descr,obj,now());
 	ELSE
@@ -49,8 +49,8 @@ BEGIN
 	DECLARE user_id VARCHAR(200);
 	DECLARE pCount INT;
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
-	SELECT id INTO user_id FROM subjects WHERE STRCMP(user,subjects.username)=0 LIMIT 1;
-	SELECT count(*) INTO pCount FROM permissions WHERE STRCMP(subject_id,user_id)=0 AND STRCMP(object_id,(SELECT object_id FROM transactions WHERE STRCMP(t_id,transactions.id)=0))=0 AND permission='DELETE';
+	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
+	SELECT count(*) INTO pCount FROM permissions WHERE STRCMP(entity_id,user_id)=0 AND STRCMP(object_id,(SELECT object_id FROM transactions WHERE STRCMP(t_id,transactions.id)=0))=0 AND permission='DELETE';
 	IF (pCount > 0) THEN
 		DELETE FROM transactions WHERE STRCMP(t_id,transactions.id)=0;
 	ELSE
@@ -62,9 +62,9 @@ CREATE TRIGGER ins AFTER INSERT ON roles
 FOR EACH ROW
 BEGIN
 	IF NEW.role = 'MANAGER' THEN
-		INSERT INTO permissions VALUES (NEW.subject_id,'DELETE',NEW.object_id), (NEW.subject_id,'UPDATE',NEW.object_id), (NEW.subject_id,'READ',NEW.object_id);
+		INSERT INTO permissions VALUES (NEW.entity_id,'DELETE',NEW.object_id), (NEW.entity_id,'UPDATE',NEW.object_id), (NEW.entity_id,'READ',NEW.object_id);
 	END IF;
 	IF NEW.role = 'FOREMAN' THEN
-		INSERT INTO permissions VALUES (NEW.subject_id,'INSERT',NEW.object_id), (NEW.subject_id,'UPDATE_SELF',NEW.object_id), (NEW.subject_id,'READ',NEW.object_id);
+		INSERT INTO permissions VALUES (NEW.entity_id,'INSERT',NEW.object_id), (NEW.entity_id,'UPDATE_SELF',NEW.object_id), (NEW.entity_id,'READ',NEW.object_id);
 	END IF;
 END;
