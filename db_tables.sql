@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `entities`;
 CREATE TABLE `entities` (
   `id` char(36) NOT NULL,
-  `type` enum('EMPLOYEE','CLIENT','COMPANY','SHOP','FOREMAN','MANAGER') NOT NULL,
+  `type` enum('EMPLOYEE','CLIENT','COMPANY','SHOP') NOT NULL,
   `name` varchar(200) NOT NULL,
   `username` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
