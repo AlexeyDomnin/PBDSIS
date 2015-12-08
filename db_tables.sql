@@ -5,7 +5,7 @@ COLLATE utf8_general_ci;
 
 USE new_sevryukov_task;
 
-CREATE TABLE IF NOT EXISTS entities (
+CREATE TABLE IF NOT EXISTS subjects (
   id char(36) NOT NULL DEFAULT '1',
   type enum ('EMPLOYEE','CLIENT','COMPANY','SHOP','FOREMAN','MANAGER') NOT NULL,
   name varchar(200) NOT NULL,
@@ -30,12 +30,12 @@ COLLATE utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS balance_per_day (
   id char(36) NOT NULL DEFAULT '1',
-  entity_id char(36) NOT NULL,
+  subject_id char(36) NOT NULL,
   date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   balance decimal(10, 2) NOT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT Balance_entities FOREIGN KEY (entity_id)
-  REFERENCES entities (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT Balance_subjects FOREIGN KEY (subject_id)
+  REFERENCES subjects (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 )
 ENGINE = INNODB
 AVG_ROW_LENGTH = 1024
@@ -44,11 +44,11 @@ COLLATE utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS objects (
   id char(36) NOT NULL,
-  entity_id char(36) NOT NULL,
+  subject_id char(36) NOT NULL,
   description text NOT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT objects_entities FOREIGN KEY (entity_id)
-  REFERENCES entities (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT objects_subjects FOREIGN KEY (subject_id)
+  REFERENCES subjects (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 )
 ENGINE = INNODB
 CHARACTER SET utf8
@@ -56,14 +56,14 @@ COLLATE utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS tickets (
   id char(36) NOT NULL,
-  entity_id char(36) NOT NULL,
+  subject_id char(36) NOT NULL,
   description text NOT NULL,
   value decimal(10, 2) NOT NULL,
   status enum ('PENDING', 'ACCEPTED', 'REJECTED') NOT NULL,
   reason text DEFAULT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT tickets_entities FOREIGN KEY (entity_id)
-  REFERENCES entities (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT tickets_subjects FOREIGN KEY (subject_id)
+  REFERENCES subjects (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 )
 ENGINE = INNODB
 CHARACTER SET utf8
@@ -71,17 +71,17 @@ COLLATE utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS transactions (
   id char(36) NOT NULL DEFAULT '1',
-  from_entity_id char(36) NOT NULL,
-  to_entity_id char(36) NOT NULL,
+  from_subject_id char(36) NOT NULL,
+  to_subject_id char(36) NOT NULL,
   type enum ('SALLARY', 'MATERIAL', 'CLIENT') NOT NULL,
   value decimal(10, 2) NOT NULL DEFAULT 0.00,
   description text NOT NULL,
   created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
-  CONSTRAINT transactions_entities1 FOREIGN KEY (from_entity_id)
-  REFERENCES entities (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT transactions_entities2 FOREIGN KEY (to_entity_id)
-  REFERENCES entities (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT transactions_subjects1 FOREIGN KEY (from_subject_id)
+  REFERENCES subjects (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT transactions_subjects2 FOREIGN KEY (to_subject_id)
+  REFERENCES subjects (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 )
 ENGINE = INNODB
 AVG_ROW_LENGTH = 2048
@@ -89,10 +89,10 @@ CHARACTER SET utf8
 COLLATE utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS assignments (
-  entity_id char(36) NOT NULL,
+  subject_id char(36) NOT NULL,
   object_id char(36) NOT NULL,
-  CONSTRAINT assignments_entities FOREIGN KEY (entity_id)
-  REFERENCES entities (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT assignments_subjects FOREIGN KEY (subject_id)
+  REFERENCES subjects (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT assignments_objects FOREIGN KEY (object_id)
   REFERENCES objects (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 )
@@ -101,11 +101,11 @@ CHARACTER SET utf8
 COLLATE utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS permissions (
-  entity_id char(36) NOT NULL,
+  subject_id char(36) NOT NULL,
   permission enum ('DELETE', 'INSERT', 'READ', 'UPDATE', 'UPDATE_SELF') DEFAULT NULL,
   object_id char(36) NOT NULL,
-  CONSTRAINT permission_entities FOREIGN KEY (entity_id)
-  REFERENCES entities (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT permission_subjects FOREIGN KEY (subject_id)
+  REFERENCES subjects (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT permission_objects FOREIGN KEY (object_id)
   REFERENCES objects (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 )
@@ -115,12 +115,12 @@ COLLATE utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS roles (
   id char(36) NOT NULL,
-  entity_id char(36) NOT NULL,
+  subject_id char(36) NOT NULL,
   object_id char(36) NOT NULL,
   role enum ('FOREMAN', 'MANAGER','EMPLOYEE') NOT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT role_entities FOREIGN KEY (entity_id)
-  REFERENCES entities (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT role_subjects FOREIGN KEY (subject_id)
+  REFERENCES subjects (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT role_objects FOREIGN KEY (object_id)
   REFERENCES objects (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 )
@@ -130,12 +130,12 @@ COLLATE utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS stages (
   id char(36) NOT NULL,
-  entity_id char(36) NOT NULL,
+  subject_id char(36) NOT NULL,
   object_id char(36) NOT NULL,
   description text NOT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT stages_entities FOREIGN KEY (entity_id)
-  REFERENCES entities (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT stages_subjects FOREIGN KEY (subject_id)
+  REFERENCES subjects (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT stages_objects FOREIGN KEY (object_id)
   REFERENCES objects (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 )
@@ -175,9 +175,9 @@ $$
 
 CREATE
 DEFINER = 'root'@'localhost'
-TRIGGER BEFORE_INSERT_ENTITIES
+TRIGGER BEFORE_INSERT_subjects
 BEFORE INSERT
-ON entities
+ON subjects
 FOR EACH ROW
 BEGIN
   SET NEW.id = UUID();
