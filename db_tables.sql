@@ -29,7 +29,7 @@ CREATE TABLE `balance_per_day` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `objects`;
-СREATE TABLE `objects` (
+CREATE TABLE `objects` (
   `id` char(36) NOT NULL,
   `entity_id` char(36) NOT NULL,
   `description` text NOT NULL,
