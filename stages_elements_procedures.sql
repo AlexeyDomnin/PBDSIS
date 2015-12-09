@@ -25,7 +25,7 @@ BEGIN
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
 	SELECT id FROM entities WHERE username = user INTO user_id;
         SELECT role FROM roles WHERE entity_id = user_id INTO user_role;
-	IF ((user_role = 'FORENAM') OR (user = 'root')) THEN
+	IF ((user_role = 'FOREMAN') OR (user = 'root')) THEN
 		INSERT INTO stages (id, entity_id, object_id, description) VALUES (UUID(), entity_id, object_id, description);
 	ELSE
 		SELECT "Error";
@@ -85,7 +85,7 @@ BEGIN
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
 	SELECT id FROM entities WHERE username = user INTO user_id;
         SELECT role FROM roles WHERE entity_id = user_id INTO user_role;
-	IF ((user_role = 'FORENAM') OR (user = 'root')) THEN
+	IF ((user_role = 'FOREMAN') OR (user = 'root')) THEN
 		IF (SELECT COUNT(*) FROM elements WHERE ((stage_id = stage_id) AND (completed = 0)) > 0 ) THEN
 			SELECT "not all elements completed";
 		ELSE
