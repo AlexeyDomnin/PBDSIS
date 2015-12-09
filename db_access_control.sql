@@ -28,7 +28,7 @@ BEGIN
 	END IF;
 END;
 
-CREATE PROCEDURE insert_transaction(IN from CHAR(36), IN to CHAR(36), IN val DECIMAL(10,2), IN descr TEXT, IN obj char(36))
+CREATE PROCEDURE insert_transaction(IN f CHAR(36), IN t CHAR(36), IN val DECIMAL(10,2), IN descr TEXT, IN obj char(36))
 BEGIN
 	DECLARE user VARCHAR(200);
 	DECLARE user_id VARCHAR(200);
