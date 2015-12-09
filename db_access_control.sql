@@ -68,3 +68,19 @@ BEGIN
 		INSERT INTO permissions VALUES (NEW.entity_id,'INSERT',NEW.object_id), (NEW.entity_id,'UPDATE_SELF',NEW.object_id), (NEW.entity_id,'READ',NEW.object_id);
 	END IF;
 END;
+
+CREATE TRIGGER roles_reject_non_employees BEFORE INSERT ON roles
+FOR EACH ROW
+BEGIN
+	IF (SELECT count(*) FROM entities WHERE NEW.entity_id=entities.id AND entities.type='EMPLOYEE')=0 THEN
+		INSERT INTO roles VALUES (NULL,NULL,NULL,NULL);
+	END IF;
+END;
+
+CREATE TRIGGER objects_reject_non_clients BEFORE INSERT ON objects
+FOR EACH ROW
+BEGIN
+	IF (SELECT count(*) FROM entities WHERE NEW.entity_id=entities.id AND entities.type='CLIENT')=0 THEN
+		INSERT INTO objects VALUES (NULL,NULL,NULL);
+	END IF;
+END;
