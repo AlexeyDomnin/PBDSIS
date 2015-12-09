@@ -105,11 +105,14 @@ CREATE TABLE `tickets` (
   `account_id` char(36) NOT NULL,
   `description` text NOT NULL,
   `value` decimal(10,2) NOT NULL,
+  `object_id` char(36) NOT NULL,
   `status` enum('PENDING','ACCEPTED','REJECTED') NOT NULL,
   `reason` text,
   PRIMARY KEY (`id`),
-  KEY `tickets_accounts1` (`account_id`),
-  CONSTRAINT `tickets_accounts1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
+  KEY `tickets_accounts` (`account_id`),
+  KEY `tickets_objects` (`object_id`),
+  CONSTRAINT `tickets_accounts` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`),
+  CONSTRAINT `tickets_objects` FOREIGN KEY (`object_id`) REFERENCES `objects` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `transactions`;
