@@ -28,7 +28,7 @@ BEGIN
 	END IF;
 END;
 
-CREATE PROCEDURE insert_transaction(IN f CHAR(36), IN t CHAR(36), IN ty VARCHAR(200), IN val DECIMAL(10,2), IN descr TEXT, IN obj char(36))
+CREATE PROCEDURE insert_transaction(IN from CHAR(36), IN to CHAR(36), IN val DECIMAL(10,2), IN descr TEXT, IN obj char(36))
 BEGIN
 	DECLARE user VARCHAR(200);
 	DECLARE user_id VARCHAR(200);
@@ -37,7 +37,7 @@ BEGIN
 	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
 	SELECT count(*) INTO pCount FROM permissions WHERE STRCMP(entity_id,user_id)=0 AND STRCMP(object_id,obj)=0 AND permission='INSERT';
 	IF (pCount > 0) THEN
-		INSERT INTO transactions VALUES (UUID(), f, t, ty, val, descr,obj,now());
+		INSERT INTO transactions VALUES (UUID(), f, t, val, descr,obj,now());
 	ELSE
 		SELECT "Error";
 	END IF;
@@ -67,6 +67,12 @@ BEGIN
 	IF NEW.role = 'FOREMAN' THEN
 		INSERT INTO permissions VALUES (NEW.entity_id,'INSERT',NEW.object_id), (NEW.entity_id,'UPDATE_SELF',NEW.object_id), (NEW.entity_id,'READ',NEW.object_id);
 	END IF;
+END;
+
+CREATE TRIGGER role_del AFTER DELETE ON roles
+FOR EACH ROW
+BEGIN
+	DELETE FROM permissions WHERE permissions.entity_id=OLD.entity_id AND permissions.object_id=OLD.object_id;
 END;
 
 CREATE TRIGGER roles_reject_non_employees BEFORE INSERT ON roles
