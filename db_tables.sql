@@ -119,7 +119,7 @@ CREATE TABLE `transactions` (
   `to_account_id` char(36) NOT NULL,
   `value` decimal(10,2) NOT NULL,
   `description` text NOT NULL,
-  `object_id` char(36) NOT NULL,
+  `object_id` char(36),
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `transactions_accounts1` (`from_account_id`),
