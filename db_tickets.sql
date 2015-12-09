@@ -1,10 +1,10 @@
 CREATE PROCEDURE create_ticket (IN account_id CHAR(36), IN descript text, IN val decimal(10,2), IN obj_id CHAR(36))
 BEGIN
 	DECLARE user VARCHAR(200);
-	DECLARE isForeman int;
-	DECLARE hisAccount tinyint(1);
-	DECLARE hisObject tinyint(1);
-	DECLARE user_id varchar(200);
+	DECLARE isForeman tinyint(1);
+	DECLARE hisAccount int;
+	DECLARE hisObject int;
+	DECLARE user_id CHAR(36);
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
 	SELECT STRCMP(role,'FOREMAN') INTO isForeman FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
 	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
@@ -22,8 +22,8 @@ CREATE PROCEDURE accept_ticket(IN t_id CHAR(36))
 BEGIN
 	DECLARE user VARCHAR(200);
 	DECLARE isManager tinyint(1);
-	DECLARE hisObject tinyint(1);
-	DECLARE user_id varchar(200);
+	DECLARE hisObject int;
+	DECLARE user_id CHAR(36);
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
 	SELECT STRCMP(role,'MANAGER') INTO isManager FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
 	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
@@ -44,8 +44,8 @@ CREATE PROCEDURE reject_ticket(IN t_id CHAR(36), IN reas text)
 BEGIN
 	DECLARE user VARCHAR(200);
 	DECLARE isForeman tinyint(1);
-    	DECLARE hisObject tinyint(1);
-    	DECLARE user_id varchar(200);
+    	DECLARE hisObject int;
+    	DECLARE user_id CHAR(36);
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
 	SELECT STRCMP(role,'MANAGER') INTO isForeman FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
     	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
