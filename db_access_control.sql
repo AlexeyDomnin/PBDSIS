@@ -81,6 +81,12 @@ BEGIN
 	IF (SELECT count(*) FROM entities WHERE NEW.entity_id=entities.id AND entities.type='EMPLOYEE')=0 THEN
 		INSERT INTO roles VALUES (NULL,NULL,NULL,NULL);
 	END IF;
+	if (not (select count(*) from roles where NEW.role='FOREMAN' and roles.role='FOREMAN' and new.object_id=roles.object_id)=0) then
+		INSERT INTO roles VALUES (NULL,NULL,NULL,NULL);
+	end if;
+	if (not (select count(*) from roles where NEW.role='MANAGER' and roles.role='MANAGER' and new.object_id=roles.object_id)=0) then
+		INSERT INTO roles VALUES (NULL,NULL,NULL,NULL);
+	end if;
 END;
 
 CREATE TRIGGER objects_reject_non_clients BEFORE INSERT ON objects
