@@ -72,7 +72,7 @@ BEGIN
 	DECLARE foreman_id CHAR(36);
 	DECLARE acc_id CHAR(36);
 	DECLARE obj_id CHAR(36);
-	select object.id into obj_id from stages inner join objects on stages.object_id=objects.id 
+	select objects.id into obj_id from stages inner join objects on stages.object_id=objects.id 
 					where stages.id = st_id limit 1;
 	select roles.entity_id into foreman_id from roles where roles.object_id=obj_id and roles.role='FOREMAN' limit 1;
 	select accounts.id into acc_id from accounts where accounts.entity_id=foreman_id and accounts.name='SALARY' limit 1;
