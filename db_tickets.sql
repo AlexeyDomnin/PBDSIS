@@ -24,9 +24,12 @@ BEGIN
 	DECLARE isManager tinyint(1);
 	DECLARE hisObject int;
 	DECLARE user_id CHAR(36);
+	DECLARE CompanyId CHAR(36);
+    
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
 	SELECT STRCMP(role,'MANAGER') INTO isManager FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
 	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
+	SELECT id INTO CompanyId FROM entities WHERE entities.type='COMPANY' limit 1;
 	select count(*) into hisObject from roles,tickets
 					where roles.role='MANAGER' and roles.entity_id=user_id and 
                     			roles.object_id=tickets.object_id and
@@ -34,7 +37,10 @@ BEGIN
 	IF (isManager > 0 and hisAccount > 0) THEN
     	begin
 		update tickets set tickets.status = 'ACCEPTED' where tickets.id = t_id;
-	end;
+            	insert into transactions  
+			select uuid(), CompanyId, tickets.account_id, tickets.value, tickets.description, tickets.object_id, now()
+				from tikets where tickets.id = t_id;
+		end;
 	ELSE
 		SELECT "Error";
 	END IF;
