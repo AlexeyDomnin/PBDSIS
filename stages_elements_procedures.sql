@@ -52,7 +52,7 @@ BEGIN
 	END IF;
         SELECT COUNT(*) FROM (SELECT * FROM elements WHERE stage_id = stage_id) AS el WHERE completed = 0 INTO tmp1;
         IF (tmp1 = 0) THEN
-        	call create_tickets(stage_id);
+        	call create_tickets_auto(stage_id);
         END IF;
 END
 
