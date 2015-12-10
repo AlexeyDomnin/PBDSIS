@@ -12,7 +12,7 @@ BEGIN
 	select count(*) into hisAccount from accounts inner join entities on accounts.entity_id=entities.id 
 					where accounts.id=account_id and STRCMP(user,entities.username)=0;
 	select count(*) into hisObject from roles where roles.role='FOREMAN' and roles.entity_id=user_id and roles.object_id=obj_id;
-	IF (isForeman > 0 and hisAccount > 0 and hisObject >0) THEN
+	IF (isForeman = 0 and hisAccount > 0 and hisObject >0) THEN
 		insert into tickets values(UUID(), account_id, descript, val, obj_id, 'PENDING', '');
 	ELSE
 		SELECT "Error";
@@ -36,7 +36,7 @@ BEGIN
 					where roles.role='MANAGER' and roles.entity_id=user_id and 
                     			roles.object_id=tickets.object_id and
                     			tickets.id=t_id;
-	IF (isManager > 0 and hisAccount > 0) THEN
+	IF (isManager = 0 and hisAccount > 0) THEN
     	begin
 		update tickets set tickets.status = 'ACCEPTED' where tickets.id = t_id;
             	insert into transactions  
@@ -62,7 +62,7 @@ BEGIN
 				    	where roles.role='MANAGER' and roles.entity_id=user_id and 
                     			roles.object_id=tickets.object_id and
                     			tickets.id=t_id;
-	IF (isManager > 0 and hisAccount >0) THEN
+	IF (isManager = 0 and hisAccount >0) THEN
 		update tickets set tickets.status = 'REJECTED', tickets.reason=reas where tickets.id = t_id;
 	ELSE
 		SELECT "Error";
