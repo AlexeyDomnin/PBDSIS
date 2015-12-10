@@ -51,7 +51,7 @@ END;
 CREATE PROCEDURE reject_ticket(IN t_id CHAR(36), IN reas text)
 BEGIN
 	DECLARE user VARCHAR(200);
-	DECLARE isForeman tinyint(1);
+	DECLARE isManager tinyint(1);
     	DECLARE hisObject int;
     	DECLARE user_id CHAR(36);
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
