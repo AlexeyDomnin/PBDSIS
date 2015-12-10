@@ -6,7 +6,8 @@ BEGIN
 	DECLARE hisObject int;
 	DECLARE user_id CHAR(36);
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
-	SELECT STRCMP(role,'FOREMAN') INTO isForeman FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
+	SELECT STRCMP(roles.role,'FOREMAN') INTO isForeman FROM roles inner join entities on roles.entity_id=entities.id 
+						WHERE STRCMP(user,entities.username)=0 LIMIT 1;
 	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
 	select count(*) into hisAccount from accounts inner join entities on accounts.entity_id=entities.id 
 					where accounts.id=account_id and STRCMP(user,entities.username)=0;
@@ -27,7 +28,8 @@ BEGIN
 	DECLARE CompanyId CHAR(36);
     
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
-	SELECT STRCMP(role,'MANAGER') INTO isManager FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
+	SELECT STRCMP(roles.role,'MANAGER') INTO isManager FROM roles inner join entities on roles.entity_id=entities.id 
+						WHERE STRCMP(user,entities.username)=0 LIMIT 1;
 	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
 	SELECT id INTO CompanyId FROM entities WHERE entities.type='COMPANY' limit 1;
 	select count(*) into hisObject from roles,tickets
@@ -53,7 +55,8 @@ BEGIN
     	DECLARE hisObject int;
     	DECLARE user_id CHAR(36);
 	SELECT SUBSTRING_INDEX(USER(),'@',1) INTO user;
-	SELECT STRCMP(role,'MANAGER') INTO isForeman FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
+	SELECT STRCMP(roles.role,'MANAGER') INTO isManager FROM roles inner join entities on roles.entity_id=entities.id 
+						WHERE STRCMP(user,entities.username)=0 LIMIT 1;
     	SELECT id INTO user_id FROM entities WHERE STRCMP(user,entities.username)=0 LIMIT 1;
     	select count(*) into hisObject from roles,tickets
 				    	where roles.role='MANAGER' and roles.entity_id=user_id and 
