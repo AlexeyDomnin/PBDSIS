@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE `accounts` (
   `id` char(36) NOT NULL DEFAULT '1',
   `entity_id` char(36) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` enum('MATERIAL','SALARY','CASH','OTHER') NOT NULL,
   PRIMARY KEY (`id`),
   KEY `account_entities` (`entity_id`),
   CONSTRAINT `account_entities` FOREIGN KEY (`entity_id`) REFERENCES `entities` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
