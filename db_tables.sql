@@ -127,6 +127,8 @@ CREATE TABLE `transactions` (
   PRIMARY KEY (`id`),
   KEY `transactions_accounts1` (`from_account_id`),
   KEY `transactions_accounts2` (`to_account_id`),
+  KEY `transactions_objects` (`object_id`),
   CONSTRAINT `transactions_accounts1` FOREIGN KEY (`from_account_id`) REFERENCES `accounts` (`id`),
-  CONSTRAINT `transactions_accounts2` FOREIGN KEY (`to_account_id`) REFERENCES `accounts` (`id`)
+  CONSTRAINT `transactions_accounts2` FOREIGN KEY (`to_account_id`) REFERENCES `accounts` (`id`),
+  CONSTRAINT `transactions_objects` FOREIGN KEY (`object_id`) REFERENCES `objects` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
