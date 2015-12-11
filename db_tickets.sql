@@ -41,7 +41,7 @@ BEGIN
 		update tickets set tickets.status = 'ACCEPTED' where tickets.id = t_id;
             	insert into transactions  
 			select uuid(), CompanyId, tickets.account_id, tickets.value, tickets.description, tickets.object_id, now()
-				from tikets where tickets.id = t_id;
+				from tiсkets where tickets.id = t_id;
 		end;
 	ELSE
 		SELECT "Error";
