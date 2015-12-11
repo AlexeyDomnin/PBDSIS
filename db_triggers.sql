@@ -30,7 +30,73 @@ CREATE TRIGGER on_delete_from_elements AFTER DELETE ON elements FOR EACH ROW INS
 
 CREATE TRIGGER on_delete_from_tickets AFTER DELETE ON tickets FOR EACH ROW INSERT INTO log(id,date,description) values(UUID(),NOW(),CONCAT("ticket ",OLD.id," deleted from Ticketss by ",USER()));
 
+DELIMITER $$
 
+CREATE
+TRIGGER AFTER_DELETE_balance_per_day
+AFTER DELETE
+ON balance_per_day
+FOR EACH ROW
+BEGIN
+  INSERT INTO log (id, date, description)
+    VALUES (UUID(), NOW(), CONCAT('the row ', OLD.id, ' of the table balance_per_day was deleted'));
+END
+$$
 
+CREATE
+TRIGGER AFTER_DELETE_transactions
+AFTER DELETE
+ON transactions
+FOR EACH ROW
+BEGIN
+  INSERT INTO log (id, date, description)
+    VALUES (UUID(), NOW(), CONCAT('the transaction ', OLD.id, ' was deleted'));
+END
+$$
 
+CREATE
+TRIGGER AFTER_INSERT_balance_per_day
+AFTER INSERT
+ON balance_per_day
+FOR EACH ROW
+BEGIN
+  INSERT INTO Log (id, date, description)
+    VALUES (UUID(), NOW(), CONCAT('the balance for ', NEW.account_id, ' account is calculated and added to the table balance_per_day'));
+END
+$$
+
+CREATE
+TRIGGER AFTER_INSERT_transactions
+AFTER INSERT
+ON transactions
+FOR EACH ROW
+BEGIN
+  INSERT INTO log (id, date, description)
+    VALUES (UUID(), NOW(), CONCAT('the transaction ', NEW.id, ' was created'));
+END
+$$
+
+CREATE
+TRIGGER AFTER_UPDATE_balance_per_day
+AFTER UPDATE
+ON balance_per_day
+FOR EACH ROW
+BEGIN
+  INSERT INTO log (id, date, description)
+    VALUES (UUID(), NOW(), CONCAT('the row ', OLD.id, ' of the table balance_per_day was updated'));
+END
+$$
+
+CREATE
+TRIGGER AFTER_UPDATE_transactions
+AFTER UPDATE
+ON transactions
+FOR EACH ROW
+BEGIN
+  INSERT INTO log (id, date, description)
+    VALUES (UUID(), NOW(), CONCAT('the transaction ', OLD.id, ' was updated'));
+END
+$$
+
+DELIMITER ;
 
